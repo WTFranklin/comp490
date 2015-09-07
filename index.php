@@ -11,16 +11,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
-<style type="text/css">
-  .form
-  {
-    width: 300px !important;
-    
-  }
-</style>
-  
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">  
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -41,8 +32,7 @@
     }
 
     $.ajax({
-        //url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/geolookup/conditions/q/" + ($("#state_usa_value").val()) + "/" + c + ".json",
-        url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/forecast10day/conditions/q/" + ($("#state_usa_value").val()) + "/" + c + ".json",
+        url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/forecast/geolookup/conditions/q/" + ($("#state_usa_value").val()) + "/" + c + ".json",
         dataType: "jsonp",
         success: function(parsed_json) {
           //var location = parsed_json['location']['city'];
@@ -55,7 +45,7 @@
              str += parsed_json['current_observation']['temp_f'] + ", ";
           }
           */
-         var tmp = parsed_json['forecast']['simpleforecast'];
+         var tmp = parsed_json['current_observation'];
          
          for (var key in tmp) {
             if (tmp.hasOwnProperty(key)) {
@@ -64,12 +54,11 @@
             }
           }
           
-          alert(str);
+          alert("weather " + tmp['temp_f']);
           
-          //var location = parsed_json['forecast']['txt_forecast']['forecastday']['title'];
-          //var temp_f   = parsed_json['current_observation']['temp_f'];
-          var temp_f = "nothing currently...";
-          //alert("Current temperature in " + location + " is: " + temp_f);
+          $("#location").html(tmp['display_location']['full'] + " as observed at " + tmp['observation_location']['full']);
+          $("#img").html("Weather API with worst documentation ever brought to you by: <a href='" + tmp['image']['link'] + "' target='_blank'><img src='" + tmp['image']['url'] + "'></a>");
+          
         }
       });
   }
@@ -108,17 +97,32 @@
     </nav>
 
     <div class="container theme-showcase" role="main">
-      <div class="page-header">
+      <div  >
         <h1>Sweet cow of Moscow, check out the weather!</h1>
         
-          Select state:
-          <div class="form">
-            <?php require("usa_states_select.html"); ?>
+          <div class="row">
+            <div class="col-md-4">
+              Enter a city: <input type="text" name="city" id="city">
+            </div>
+            <div class="col-md-4">
+              <?php require("usa_states_select.html"); ?>
+            </div>
+            <div class="col-md-4">
+              <button type="button" class="btn btn-primary" onclick="getWeather();">Click for Weather</button>
+            </div>
           </div>
-          <div class="form">
-            <legend>Enter a city: <input type="text" name="city" id="city"></legend>
+        
+          <div class="row">
+            <div id="location" class="col-md-6"></div>
           </div>
-        <button type="button" class="btn btn-primary" onclick="getWeather();">Click me for the Weather...</button>
+        
+          <div class="row">
+            <div id="img" class="col-md-4"></div>
+          </div>
+        
+          <div class="row">
+            <div id="img" class="col-md-12"></div>
+          </div>
         
       </div>
     </div> <!-- /container -->

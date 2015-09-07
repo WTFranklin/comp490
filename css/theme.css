@@ -16,3 +16,8 @@ body {
 .theme-showcase .navbar .container {
   width: auto;
 }
+
+#state_usa_value
+{
+  width: 300px !important;
+}
