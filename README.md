@@ -1,10 +1,10 @@
 This is the individual primer project for Comp 490L. I made my page using PHP and some javascript/jQuery that interfaces with the Weather API from http://www.wunderground.com/. The log here will be very similar to the entries written on GitHub, but with a few extra details if necessary.
 
-1) Initial commit - I haven\'92t used GitHub in a while and was never very familiar with it. My first commit was to relearn how to use it.
+1) Initial commit - I haven't used GitHub in a while and was never very familiar with it. My first commit was to relearn how to use it.
 
 2) Testing my html file - Did another commit with multiple files to make sure all was working the way I expected it to.
 
-3) More functionality - I got the API working in the easiest way possible, albeit not suing the GET verb yet. I held off on this detail because the API was difficult to figure out since the documentation was a bit vague if you haven\'92t worked with too many API\'92s in the past, like myself. The extra functionality was testing out the various ways to pull data from their server and I wanted to make sure that I used the most efficient method available.
+3) More functionality - I got the API working in the easiest way possible, albeit not suing the GET verb yet. I held off on this detail because the API was difficult to figure out since the documentation was a bit vague if you haven't worked with too many API's in the past, like myself. The extra functionality was testing out the various ways to pull data from their server and I wanted to make sure that I used the most efficient method available.
 
 4) Working on json repsonse - I ran into a couple issues with pulling the correct data. I was going to walk away for a little bit at this point to clear my head so I made a commit. I ended up coming back to work on the project much sooner than expected.
 
