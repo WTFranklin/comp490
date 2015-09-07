@@ -17,6 +17,62 @@
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script>
+
+function getWeather()
+{
+  $.ajax({
+      url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/geolookup/conditions/q/IA/Cedar_Rapids.json",
+      dataType: "jsonp",
+      success: function(parsed_json) {
+        var location = parsed_json['location']['city'];
+        var temp_f   = parsed_json['current_observation']['temp_f'];
+        alert("Current temperature in " + location + " is: " + temp_f);
+    }
+  });
+}
+
+function getTemperature(city)
+{
+  var currentTemp = false; // assume we have bad data
+  var c = city.replace(" ", "_"); //convert spaces to _
+  alert(city + " " + c);
+  
+  $.ajax({
+      url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/geolookup/conditions/q/IA/" + c + ".json",
+      dataType: "jsonp",
+      success: function(parsed_json) {
+        var temp_f   = parsed_json['current_observation']['temp_f'];
+        currentTemp = temp_f; //if we're here, we have our temperature, so store it in to currentTemp to return
+    }
+  });
+  
+  return currentTemp;
+}
+
+function autoComplete(city)
+{
+  
+  var c = city.replace(" ", "%20");
+  alert(c + " " + city);
+  
+  $.ajax({
+      url: "http://autocomplete.wunderground.com/aq?query='San%20F'",
+      dataType: "jsonp",
+      success: function(parsed_json) {
+        var location = parsed_json['location']['city'];
+        //var temp_f   = parsed_json['current_observation']['temp_f'];
+        var temp_f = getTemperature(location);
+        alert("Current temperature in " + location + " is: " + temp_f);
+      },
+      error: function(req, status, err){
+        alert("Es gab ein Problem " + err));
+      }
+  });
+}
+</script>
+
     <!-- Custom styles for this template -->
     <link href="css/theme.css" rel="stylesheet">
 
@@ -50,11 +106,12 @@
 
     <div class="container theme-showcase" role="main">
       <div class="page-header">
-        <h1>Buttons</h1>
+        <h1>Sweet cow of Moscow, check out the weather!</h1>
+        
+        <button type="button" class="btn btn-primary" onclick="getWeather();">Click me for the Weather...</button>
+        <button type="button" class="btn btn-primary" onclick="autoComplete('Los A');">Click me for "auto complete"...</button>
+        
       </div>
-      
-      
-
     </div> <!-- /container -->
   </body>
 </html>
