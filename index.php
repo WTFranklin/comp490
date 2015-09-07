@@ -55,11 +55,12 @@
              str += parsed_json['current_observation']['temp_f'] + ", ";
           }
           */
+         var tmp = parsed_json['forecast']['simpleforecast'];
          
-         for (var key in parsed_json['forecast']['txt_forecast']['forecastday']) {
-            if (parsed_json['forecast']['txt_forecast']['forecastday'].hasOwnProperty(key)) {
+         for (var key in tmp) {
+            if (tmp.hasOwnProperty(key)) {
               //alert(key + " -> " + parsed_json[key]);
-              str += key + " -> " + parsed_json['forecast']['txt_forecast']['forecastday'][key];
+              str += key + " -> " + tmp[key];
             }
           }
           
