@@ -13,64 +13,66 @@
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
+<style type="text/css">
+  .form
+  {
+    width: 300px !important;
+    
+  }
+</style>
+  
+
 <!-- Latest compiled and minified JavaScript -->
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script>
 
-function getWeather()
-{
-  $.ajax({
-      url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/geolookup/conditions/q/IA/Cedar_Rapids.json",
-      dataType: "jsonp",
-      success: function(parsed_json) {
-        var location = parsed_json['location']['city'];
-        var temp_f   = parsed_json['current_observation']['temp_f'];
-        alert("Current temperature in " + location + " is: " + temp_f);
-    }
-  });
-}
+  function getWeather()
+  {
 
-function getTemperature(city)
-{
-  var currentTemp = false; // assume we have bad data
-  var c = city.replace(" ", "_"); //convert spaces to _
-  alert(city + " " + c);
-  
-  $.ajax({
-      url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/geolookup/conditions/q/IA/" + c + ".json",
-      dataType: "jsonp",
-      success: function(parsed_json) {
-        var temp_f   = parsed_json['current_observation']['temp_f'];
-        currentTemp = temp_f; //if we're here, we have our temperature, so store it in to currentTemp to return
+    var city = $("#city").val();
+    var c = city.replace(" ", "%20");
+    
+    if($("#state_usa_value").val() === "stat")
+    {
+      alert("You must choose a state!");
+      return;
     }
-  });
-  
-  return currentTemp;
-}
 
-function autoComplete(city)
-{
-  
-  var c = city.replace(" ", "%20");
-  alert(c + " " + city);
-  
-  $.ajax({
-      url: "http://autocomplete.wunderground.com/aq?query='San%20F'",
-      dataType: "jsonp",
-      success: function(parsed_json) {
-        var location = parsed_json['location']['city'];
-        //var temp_f   = parsed_json['current_observation']['temp_f'];
-        var temp_f = getTemperature(location);
-        alert("Current temperature in " + location + " is: " + temp_f);
-      },
-      error: function(req, status, err){
-        alert("Es gab ein Problem " + err));
-      }
-  });
-}
+    $.ajax({
+        //url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/geolookup/conditions/q/" + ($("#state_usa_value").val()) + "/" + c + ".json",
+        url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/forecast10day/conditions/q/" + ($("#state_usa_value").val()) + "/" + c + ".json",
+        dataType: "jsonp",
+        success: function(parsed_json) {
+          //var location = parsed_json['location']['city'];
+          
+          var str = "";
+          
+          /*
+          for(var i = 0; i < 10; i++)
+          {
+             str += parsed_json['current_observation']['temp_f'] + ", ";
+          }
+          */
+         
+         for (var key in parsed_json['forecast']['txt_forecast']['forecastday']) {
+            if (parsed_json['forecast']['txt_forecast']['forecastday'].hasOwnProperty(key)) {
+              //alert(key + " -> " + parsed_json[key]);
+              str += key + " -> " + parsed_json['forecast']['txt_forecast']['forecastday'][key];
+            }
+          }
+          
+          alert(str);
+          
+          //var location = parsed_json['forecast']['txt_forecast']['forecastday']['title'];
+          //var temp_f   = parsed_json['current_observation']['temp_f'];
+          var temp_f = "nothing currently...";
+          //alert("Current temperature in " + location + " is: " + temp_f);
+        }
+      });
+  }
+
 </script>
 
     <!-- Custom styles for this template -->
@@ -108,8 +110,14 @@ function autoComplete(city)
       <div class="page-header">
         <h1>Sweet cow of Moscow, check out the weather!</h1>
         
+          Select state:
+          <div class="form">
+            <?php require("usa_states_select.html"); ?>
+          </div>
+          <div class="form">
+            <legend>Enter a city: <input type="text" name="city" id="city"></legend>
+          </div>
         <button type="button" class="btn btn-primary" onclick="getWeather();">Click me for the Weather...</button>
-        <button type="button" class="btn btn-primary" onclick="autoComplete('Los A');">Click me for "auto complete"...</button>
         
       </div>
     </div> <!-- /container -->
