@@ -19,6 +19,20 @@
 
 <script>
 
+  $(document).ready(function(){
+    $(document).keypress(function(event){
+	
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){	
+            $("#getWeath").trigger("click", function(){
+              
+            });
+        }
+
+    });
+    
+  });
+
   function getWeather()
   {
 
@@ -37,14 +51,7 @@
         success: function(parsed_json) {
           //var location = parsed_json['location']['city'];
           
-          var str = "";
-          
-          /*
-          for(var i = 0; i < 10; i++)
-          {
-             str += parsed_json['current_observation']['temp_f'] + ", ";
-          }
-          */
+         var str = "";
          var tmp = parsed_json['current_observation'];
          
          for (var key in tmp) {
@@ -54,11 +61,14 @@
             }
           }
           
-          alert("weather " + tmp['temp_f']);
-          
-          $("#location").html(tmp['display_location']['full'] + " as observed at " + tmp['observation_location']['full']);
+          $("#location").html("Weather in " + tmp['display_location']['full'] + " as observed at " + tmp['observation_location']['full']);
+          $("#temp").html("Current temp: " + tmp['temp_f'] + "&deg; F");
+          $("#feels").html("Feels like: " + tmp['feelslike_f'] + "&deg; F");
+          $("#weather").html("Conditions: " + tmp['weather'] + "<img src='" + tmp['icon_url'] + "'>");
           $("#img").html("Weather API with worst documentation ever brought to you by: <a href='" + tmp['image']['link'] + "' target='_blank'><img src='" + tmp['image']['url'] + "'></a>");
           
+        },
+        error: function(event) {
         }
       });
   }
@@ -87,7 +97,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project 1</a>
+          <a class="navbar-brand" href="#">Weather Lookup</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -98,9 +108,9 @@
 
     <div class="container theme-showcase" role="main">
       <div  >
-        <h1>Sweet cow of Moscow, check out the weather!</h1>
+        <h1>Sweet sun of CSUN, check out the weather!</h1>
         
-          <div class="row">
+          <div class="row wcontent">
             <div class="col-md-4">
               Enter a city: <input type="text" name="city" id="city">
             </div>
@@ -108,19 +118,27 @@
               <?php require("usa_states_select.html"); ?>
             </div>
             <div class="col-md-4">
-              <button type="button" class="btn btn-primary" onclick="getWeather();">Click for Weather</button>
+              <button type="button" id="getWeath" class="btn btn-primary" onclick="getWeather();">Click for Weather</button>
             </div>
           </div>
         
-          <div class="row">
+          <div class="row wcontent">
             <div id="location" class="col-md-6"></div>
           </div>
         
           <div class="row">
-            <div id="img" class="col-md-4"></div>
+            <div id="weather" class="col-md-4"></div>
           </div>
         
           <div class="row">
+            <div id="temp" class="col-md-4"></div>
+          </div>
+        
+          <div class="row wcontent">
+            <div id="feels" class="col-md-4"></div>
+          </div>
+          
+          <div class="row wcontent">
             <div id="img" class="col-md-12"></div>
           </div>
         
