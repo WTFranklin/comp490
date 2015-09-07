@@ -21,3 +21,9 @@ body {
 {
   width: 300px !important;
 }
+
+.wcontent
+{
+  margin-bottom: 20px;
+  vertical-align: middle;
+}

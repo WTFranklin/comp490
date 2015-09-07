@@ -17,63 +17,22 @@
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-<script>
+<script src="js/weather.js"></script>
 
-  $(document).ready(function(){
-    $(document).keypress(function(event){
-	
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if(keycode == '13'){	
-            $("#getWeath").trigger("click", function(){
-              
-            });
-        }
+<?php
 
-    });
-    
-  });
+  /*
+   * Checks to see if any variables are set in $_GET and then will call the getWeather() function from js
+   */
 
-  function getWeather()
-  {
+   if(isset($_GET['city']) && isset($_GET['state']))
+   {
+     echo '<script type="text/javascript">';
+     echo "\tgetWeather('" . $_GET['city'] . "', '" . $_GET['state'] . "');";
+     echo '</script>';
+   }
 
-    var city = $("#city").val();
-    var c = city.replace(" ", "%20");
-    
-    if($("#state_usa_value").val() === "stat")
-    {
-      alert("You must choose a state!");
-      return;
-    }
-
-    $.ajax({
-        url: "http://api.wunderground.com/api/61d2b47f3a6f37a1/forecast/geolookup/conditions/q/" + ($("#state_usa_value").val()) + "/" + c + ".json",
-        dataType: "jsonp",
-        success: function(parsed_json) {
-          //var location = parsed_json['location']['city'];
-          
-         var str = "";
-         var tmp = parsed_json['current_observation'];
-         
-         for (var key in tmp) {
-            if (tmp.hasOwnProperty(key)) {
-              //alert(key + " -> " + parsed_json[key]);
-              str += key + " -> " + tmp[key];
-            }
-          }
-          
-          $("#location").html("Weather in " + tmp['display_location']['full'] + " as observed at " + tmp['observation_location']['full']);
-          $("#temp").html("Current temp: " + tmp['temp_f'] + "&deg; F");
-          $("#feels").html("Feels like: " + tmp['feelslike_f'] + "&deg; F");
-          $("#weather").html("Conditions: " + tmp['weather'] + "<img src='" + tmp['icon_url'] + "'>");
-          $("#img").html("Weather API with worst documentation ever brought to you by: <a href='" + tmp['image']['link'] + "' target='_blank'><img src='" + tmp['image']['url'] + "'></a>");
-          
-        },
-        error: function(event) {
-        }
-      });
-  }
-
-</script>
+?>
 
     <!-- Custom styles for this template -->
     <link href="css/theme.css" rel="stylesheet">
@@ -97,7 +56,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Weather Lookup</a>
+          <a class="navbar-brand" href="index.php">Frank Addelia - Primer Project: Weather Lookup</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -111,19 +70,24 @@
         <h1>Sweet sun of CSUN, check out the weather!</h1>
         
           <div class="row wcontent">
-            <div class="col-md-4">
-              Enter a city: <input type="text" name="city" id="city">
-            </div>
-            <div class="col-md-4">
-              <?php require("usa_states_select.html"); ?>
-            </div>
-            <div class="col-md-4">
-              <button type="button" id="getWeath" class="btn btn-primary" onclick="getWeather();">Click for Weather</button>
+            <form name="weather" method="get">
+              <div class="col-md-4">
+                Enter a city: <input type="text" name="city" id="city"<?php if(isset($_GET['city'])){echo " value='". $_GET['city'] . "'";} ?>>
+              </div>
+              <div class="col-md-4">
+                <?php require("usa_states_select.php"); ?>
+              </div>
+            </form>
+          </div>
+        
+          <div class="row wcontent">
+            <div class="col-md-12">
+              <button type="button" id="getWeath" class="btn btn-primary" onclick="redirect($('#city').val(), $('#state_usa_value').val());">Click for Weather</button>&nbsp;&nbsp;<button type="button" id="reset" class="btn btn-danger" onclick="redirect(null, null);">Reset Form</button>
             </div>
           </div>
         
           <div class="row wcontent">
-            <div id="location" class="col-md-6"></div>
+            <div id="location" class="col-md-12"></div>
           </div>
         
           <div class="row">
